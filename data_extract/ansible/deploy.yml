@@ -19,6 +19,18 @@
         version: main
         force: yes
 
+    - name: Show project directory
+      debug:
+        msg: "{{ project_dir }}"
+
+    - name: Print current files
+      command:
+        cmd: ls -la {{ project_dir }}
+      register: files
+
+    - debug:
+      var: files.stdout_lines
+
     - name: Stop existing containers
       ansible.builtin.command:
         cmd: docker compose down
