@@ -4,7 +4,7 @@
   become: yes
 
   vars:
-    project_dir: /home/ansible/invoice_extract
+    project_dir: /home/ansible/data_extract
 
   tasks:
 
