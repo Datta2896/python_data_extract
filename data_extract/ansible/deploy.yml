@@ -12,13 +12,6 @@
       debug:
         msg: "Starting deployment..."
 
-    - name: Pull latest code from Git
-      ansible.builtin.git:
-        repo: https://github.com/Datta2896/python_data_extract.git
-        dest: "{{ project_dir }}"
-        version: main
-        force: yes
-
     - name: Show project directory
       debug:
         msg: "{{ project_dir }}"
@@ -30,6 +23,13 @@
 
     - debug:
         var: files.stdout_lines
+
+    - name: Pull latest code from Git
+      ansible.builtin.git:
+        repo: https://github.com/Datta2896/python_data_extract.git
+        dest: "{{ project_dir }}"
+        version: main
+        force: yes
 
     - name: Stop existing containers
       ansible.builtin.command:
