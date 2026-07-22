@@ -1,0 +1,43 @@
+---
+- name: Rollback Invoice OCR
+  hosts: invoice_server
+  become: yes
+
+  vars:
+    project_dir: /home/ansible/invoice_extract
+
+  tasks:
+
+    - name: Stop application
+      command:
+        cmd: docker compose down
+        chdir: "{{ project_dir }}"
+
+    - name: Checkout previous Git commit
+      command:
+        cmd: git checkout HEAD~1
+        chdir: "{{ project_dir }}"
+
+    - name: Build previous version
+      command:
+        cmd: docker compose build
+        chdir: "{{ project_dir }}"
+
+    - name: Start previous version
+      command:
+        cmd: docker compose up -d
+        chdir: "{{ project_dir }}"
+
+    - name: Wait for application
+      wait_for:
+        port: 9000
+        timeout: 60
+
+    - name: Verify application
+      uri:
+        url: http://localhost:9000/docs
+        status_code: 200
+
+    - name: Rollback successful
+      debug:
+        msg: "Previous version restored successfully."
