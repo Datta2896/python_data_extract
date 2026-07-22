@@ -1,0 +1,60 @@
+---
+- name: Deploy Invoice OCR Application
+  hosts: invoice_server
+  become: yes
+
+  vars:
+    project_dir: /home/ansible/invoice_extract
+
+  tasks:
+
+    - name: Display deployment started
+      debug:
+        msg: "Starting deployment..."
+
+    - name: Pull latest code from Git
+      ansible.builtin.git:
+        repo: https://github.com/Datta2896/python_data_extract.git
+        dest: "{{ project_dir }}"
+        version: main
+        force: yes
+
+    - name: Stop existing containers
+      ansible.builtin.command:
+        cmd: docker compose down
+        chdir: "{{ project_dir }}"
+
+    - name: Build Docker image
+      ansible.builtin.command:
+        cmd: docker compose build
+        chdir: "{{ project_dir }}"
+
+    - name: Start containers
+      ansible.builtin.command:
+        cmd: docker compose up -d
+        chdir: "{{ project_dir }}"
+
+    - name: Show running containers
+      ansible.builtin.command:
+        cmd: docker ps
+      register: docker_output
+
+    - name: Print running containers
+      debug:
+        var: docker_output.stdout_lines
+
+    - name: Wait for application
+      ansible.builtin.wait_for:
+        port: 9000
+        timeout: 60
+
+    - name: Verify FastAPI is responding
+      ansible.builtin.uri:
+        url: http://localhost:9000/docs
+        method: GET
+        status_code: 200
+      register: health
+
+    - name: Deployment completed
+      debug:
+        msg: "Invoice OCR deployed successfully."
