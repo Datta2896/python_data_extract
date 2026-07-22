@@ -1,0 +1,4 @@
+invoice_number,invoice_date,gstin,pan,po_number,vendor,subtotal,cgst,sgst,igst,total
+Invoice,,,,,,,,,,
+Invoice,"January 25, 2016",,,12345,DEMO - Sliced Invoices Order Number 12345,85.00,,,,93.50
+Invoice,"January 25, 2016",,,12345,DEMO - Sliced Invoices Order Number 12345,85.00,,,,93.50

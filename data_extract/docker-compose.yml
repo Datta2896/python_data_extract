@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+
+  invoice-ocr:
+    build: .
+    container_name: invoice-ocr
+
+    ports:
+      - "9000:8000"
+
+    volumes:
+      - ./app/uploads:/app/uploads
+      - ./output:/app/output
+
+    restart: unless-stopped
