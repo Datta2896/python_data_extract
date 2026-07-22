@@ -29,7 +29,7 @@
       register: files
 
     - debug:
-      var: files.stdout_lines
+        var: files.stdout_lines
 
     - name: Stop existing containers
       ansible.builtin.command:
